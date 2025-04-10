@@ -31,8 +31,8 @@ def chat():
         return jsonify({"reply": reply})
 
     except Exception as e:
-    print(f"Erro ocorrido: {str(e)}")  # Mostra o erro real no log da Render
-    return jsonify({"error": "Erro interno no servidor."}), 500
+        print(f"Erro ocorrido: {str(e)}")  # Mostra o erro real no log da Render
+        return jsonify({"error": "Erro interno no servidor."}), 500
 
 
 if __name__ == "__main__":
