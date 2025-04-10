@@ -8,6 +8,10 @@ CORS(app)
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
+@app.route("/", methods=["GET"])
+def home():
+    return jsonify({"status": "API Mastologista Online ativa"})
+
 @app.route("/chat", methods=["POST"])
 def chat():
     try:
@@ -32,4 +36,4 @@ def chat():
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True, host="0.0.0.0", port=5000)
