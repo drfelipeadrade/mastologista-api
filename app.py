@@ -2,15 +2,14 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import openai
 import os
+import logging
+
+logging.basicConfig(level=logging.INFO)
 
 app = Flask(__name__)
 CORS(app)
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
-
-@app.route("/", methods=["GET"])
-def home():
-    return jsonify({"status": "API Mastologista Online ativa"})
 
 @app.route("/chat", methods=["POST"])
 def chat():
@@ -18,7 +17,7 @@ def chat():
         user_message = request.json.get("message")
 
         if not user_message:
-            return jsonify({"error": "Mensagem não fornecida"}), 400
+            return jsonify({"error": "Campo 'message' é obrigatório no corpo da requisição."}), 400
 
         response = openai.ChatCompletion.create(
             model="gpt-4-0125-preview",
@@ -32,8 +31,9 @@ def chat():
         return jsonify({"reply": reply})
 
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        logging.exception("Erro durante processamento:")
+        return jsonify({"error": "Erro interno no servidor."}), 500
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
