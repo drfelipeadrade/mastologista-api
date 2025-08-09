@@ -14,10 +14,11 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 @app.route("/chat", methods=["POST"])
 def chat():
     try:
-        user_message = request.json.get("message")
-
-        if not user_message:
+        data = request.get_json(silent=True)
+        if not data or "message" not in data:
             return jsonify({"error": "Campo 'message' é obrigatório no corpo da requisição."}), 400
+
+        user_message = data["message"]
 
         response = openai.ChatCompletion.create(
             model="gpt-4-0125-preview",
